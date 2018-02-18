@@ -1,7 +1,7 @@
-from distribute_setup import use_setuptools
-use_setuptools()
-
 from setuptools import setup, find_packages
+
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 setup(
 	name = "python-artnet",
@@ -21,5 +21,5 @@ setup(
 		]
 	},
 	
-	install_requires = open('requirements.txt', 'rU')
+	install_requires = requirements
 )

@@ -38,7 +38,7 @@ def main(config, controller=None):
 	
 	# try:
 	# 	import readline
-	# except ImportError, e:
+	# except ImportError as e:
 	# 	pass
 	# else:
 	# 	# We don't have to wrap the following import in a 'try', because
