@@ -1,5 +1,5 @@
 {
-	"manufacturer": "American DJ",
+    "manufacturer": "American DJ",
     "name": "RGB Megabar 50",
     "rgb_offsets" : {
         "red": 0,
