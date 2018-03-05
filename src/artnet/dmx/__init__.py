@@ -40,10 +40,9 @@ class AutoCycler(object):
         self.enabled = False
         return False
 
-class Controller(daemon.Poller):
-    def __init__(self, address, nodaemon=False, runout=False, fps=40.0, bpm=240.0, measure=4):
-        super(Controller, self).__init__(address, nodaemon=nodaemon, runout=runout)
-
+class Universe(object):
+    def __init__(self, id=0, fps=40.0, bpm=240.0, measure=4):
+        self.id = id
         self.fps = fps
         self.bpm = bpm
         self.measure = measure
@@ -51,34 +50,11 @@ class Controller(daemon.Poller):
         self.last_frame = Frame()
         self.generators = []
         self.access_lock = threading.Lock()
-        self.runout = runout
         self.frameindex = 0
         self.beatindex = 0
         self.beat = 0
         self.autocycle = AutoCycler(self)
-    
-    def get_clock(self):
-        def _clock():
-            return dict(
-                beat = self.beat,
-                measure = self.measure,
-                frameindex = self.frameindex,
-                fps = self.fps,
-                beatindex = self.beatindex,
-                fpb = self.fpb,
-                running = self.running,
-                last = self.last_frame
-            )
-        return _clock
-    
-    def stop(self):
-        try:
-            self.access_lock.acquire()
-            if(self.running):
-                self.running = False
-        finally:
-            self.access_lock.release()
-    
+
     def add(self, generator):
         try:
             self.access_lock.acquire()
@@ -107,17 +83,56 @@ class Controller(daemon.Poller):
             self.beat = self.beat + 1 if self.beat < self.measure - 1 else 0
         
         self.last_frame = f
+
+    def get_clock(self):
+        def _clock():
+            return dict(
+                beat = self.beat,
+                measure = self.measure,
+                frameindex = self.frameindex,
+                fps = self.fps,
+                beatindex = self.beatindex,
+                fpb = self.fpb,
+                last = self.last_frame
+            )
+        return _clock
+
+class Controller(daemon.Poller):
+    def __init__(self, address, nodaemon=False, runout=False, fps=40.0, bpm=240.0, measure=4, universes=(0,)):
+        super(Controller, self).__init__(address, nodaemon=nodaemon, runout=runout)
+        self.fps = float(fps)
+        self.runout = runout
+        self.access_lock = threading.Lock()
+        universes = xrange(universes) if isinstance(universes, int) else universes
+        self.universes = {universe:Universe(universe, self.fps, bpm, measure) for universe in universes}
+
+    def stop(self):
+        try:
+            self.access_lock.acquire()
+            if(self.running):
+                self.running = False
+        finally:
+            self.access_lock.release()
+
+    def add(self, generator, universe=0):
+        return self.universes[universe].add(generator)
     
+    def iterate(self, universe=0):
+        return self.universes[universe].iterate()
+
+    def get_clock(self, universe=0):
+        return self.universes[universe].get_clock().update({"running": self.running})
+
     def run(self):
         now = time.time()
         while(self.running):
             drift = now - time.time()
             
             # do anything potentially framerate-affecting here
-            self.iterate()
             self.handle_artnet()
-            
-            self.send_dmx(self.last_frame)
+            for universe in self.universes:
+                self.universes[universe].iterate()            
+                self.send_dmx(self.universes[universe].last_frame, universe)
             if(self.runout and len(self.generators) == 0):
                 self.running = False
             # end framerate-affecting code
@@ -129,3 +144,4 @@ class Controller(daemon.Poller):
             else:
                 log.warning("Frame rate loss; generators took %sms too long" % round(abs(excess * 1000)))
             now = time.time()
+
