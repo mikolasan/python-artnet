@@ -42,7 +42,6 @@ class Poller(threading.Thread):
         try:
             data, addr = self.sock.recvfrom(1024)
         except socket.error as e:
-            time.sleep(0.1)
             return None
         
         return packet.ArtNetPacket.decode(addr, data)
