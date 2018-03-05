@@ -3,6 +3,7 @@ import threading
 import socket
 import time
 import logging
+logging.basicConfig()
 import json
 
 import artnet

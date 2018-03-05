@@ -1,4 +1,5 @@
 import time, logging
+logging.basicConfig()
 
 from artnet import dmx, packet
 

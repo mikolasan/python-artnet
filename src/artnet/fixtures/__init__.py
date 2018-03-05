@@ -1,5 +1,6 @@
 import yaml
 import logging
+logging.basicConfig()
 import pkg_resources as pkg
 
 from artnet import dmx

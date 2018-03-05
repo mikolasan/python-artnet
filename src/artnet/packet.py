@@ -2,6 +2,7 @@ import socket
 import struct
 import time
 import logging
+logging.basicConfig()
 import uuid
 
 from artnet import OPCODES, NODE_REPORT_CODES, STYLE_CODES, STANDARD_PORT

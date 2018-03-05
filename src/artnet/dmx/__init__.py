@@ -1,4 +1,5 @@
 import time, sys, socket, logging, threading, itertools
+logging.basicConfig()
 
 from artnet import STANDARD_PORT, OPCODES, packet, daemon
 

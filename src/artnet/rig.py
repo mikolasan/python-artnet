@@ -3,6 +3,7 @@ from artnet import fixtures
 import os.path
 import yaml
 import logging
+logging.basicConfig()
 import pkg_resources as pkg
 
 from artnet import dmx

@@ -1,5 +1,6 @@
 import sys
 import logging
+logging.basicConfig()
 import code
 
 from artnet import dmx, rig

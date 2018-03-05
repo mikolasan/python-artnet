@@ -1,5 +1,6 @@
 import sys
 import logging
+logging.basicConfig()
 
 from cement.core import foundation, controller, handler
 from cement.utils import misc
