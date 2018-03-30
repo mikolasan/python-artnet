@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 
 class Frame(list):
     def __init__(self, channels=None):
-        super(Frame, self).__init__((channels[i] if channels else None for i in xrange(512)))
+        super(Frame, self).__init__((channels[i] if channels else None for i in range(512)))
     
     def __setitem__(self, index, value):
         if not(isinstance(index, int)):
@@ -103,7 +103,7 @@ class Controller(daemon.Poller):
         self.fps = float(fps)
         self.runout = runout
         self.access_lock = threading.Lock()
-        universes = xrange(universes) if isinstance(universes, int) else universes
+        universes = range(universes) if isinstance(universes, int) else universes
         self.universes = {universe:Universe(universe, self.fps, bpm, measure) for universe in universes}
 
     def stop(self):
