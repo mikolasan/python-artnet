@@ -22,10 +22,10 @@ class Poller(threading.Thread):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         
-        self.sock.bind(('', STANDARD_PORT))
+        #self.sock.bind(('', STANDARD_PORT))
         self.sock.settimeout(0.0)
         
-        self.broadcast_address = '<broadcast>'
+        self.broadcast_address = address #'<broadcast>'
         self.last_poll = 0
         self.address = address
 
