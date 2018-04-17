@@ -69,7 +69,7 @@ class Universe(object):
         f = self.last_frame
         for g in self.generators:
             try:
-                n = g.next()
+                n = next(g)
                 f = f.merge(n) if f else n
             except StopIteration:
                 self.generators.remove(g)
@@ -131,7 +131,7 @@ class Controller(daemon.Poller):
             # do anything potentially framerate-affecting here
             self.handle_artnet()
             for universe in self.universes:
-                self.universes[universe].iterate()            
+                self.universes[universe].iterate()
                 self.send_dmx(self.universes[universe].last_frame, universe)
             if(self.runout and len(self.generators) == 0):
                 self.running = False

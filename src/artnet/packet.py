@@ -16,7 +16,7 @@ class ArtNetPacket(object):
     schema = ()
     
     opcode_map = dict()
-    header = 'Art-Net\0'
+    header = b'Art-Net\0'
     protocol_version = 14
     
     @classmethod
@@ -106,7 +106,7 @@ class DmxPacket(ArtNetPacket):
         return len(self.frame)
     
     def format_framedata(self):
-        return ''.join([chr(i or 0) for i in self.frame])
+        return bytes([b or 0 for b in self.frame])
     
     def __str__(self):
         return '<DMX(%(sequence)s): %(channels)s>' % dict(
@@ -142,21 +142,21 @@ class PollReplyPacket(ArtNetPacket):
     
     port = STANDARD_PORT
     
-    short_name = 'python-artnet'
-    long_name = 'https://github.com/philchristensen/python-artnet.git'
+    short_name = b'python-artnet'
+    long_name = b'https://github.com/philchristensen/python-artnet.git'
     style = STYLE_CODES['StController']
-    esta_manufacturer = 'PA'
+    esta_manufacturer = b'PA'
     version = 1
     universe = 0
     status1 = 2
     status2 = bitstring.Bits('0b0111').int
     
     num_ports = 0
-    port_types = '\0\0\0\0'
-    good_input = '\0\0\0\0'
-    good_output = '\0\0\0\0'
+    port_types = b'\0\0\0\0'
+    good_input = b'\0\0\0\0'
+    good_output = b'\0\0\0\0'
     
-    bind_ip = '\0\0\0\0'
+    bind_ip = b'\0\0\0\0'
     mac_address = uuid.getnode()
     
     schema = (
