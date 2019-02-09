@@ -100,7 +100,7 @@ class DmxPacket(ArtNetPacket):
     @classmethod
     def parse_framedata(cls, b, fmt):
         from artnet import dmx
-        return dmx.Frame([ord(x) for x in b.read('bytes:512')])
+        return dmx.Frame([int(x) for x in b.read('bytes:512')])
     
     def format_length(self):
         return len(self.frame)
