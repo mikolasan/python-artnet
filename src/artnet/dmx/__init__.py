@@ -5,9 +5,11 @@ from artnet import STANDARD_PORT, OPCODES, packet, daemon
 
 log = logging.getLogger(__name__)
 
+FRAME_SIZE = 256 # 512
+
 class Frame(list):
     def __init__(self, channels=None):
-        super(Frame, self).__init__((channels[i] if channels else None for i in range(512)))
+        super(Frame, self).__init__((channels[i] if channels else None for i in range(FRAME_SIZE)))
     
     def __setitem__(self, index, value):
         if not(isinstance(index, int)):
@@ -22,7 +24,7 @@ class Frame(list):
     
     def merge(self, frame):
         result = Frame()
-        for i in range(512):
+        for i in range(FRAME_SIZE):
             value = self[i] if frame[i] is None else frame[i]
             if(value is not None):
                 result[i] = value
