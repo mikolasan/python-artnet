@@ -22,7 +22,7 @@ class Poller(threading.Thread):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         
-        #self.sock.bind(('', STANDARD_PORT))
+        self.sock.bind(('', STANDARD_PORT))
         self.sock.settimeout(0.0)
         
         self.broadcast_address = address #'<broadcast>'
@@ -77,3 +77,8 @@ class Poller(threading.Thread):
         log.debug("send: %s" % r)
         self.sock.sendto(r.encode(), (r.address, STANDARD_PORT))
         
+if __name__ == '__main__':
+    import configparser
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    main(config)
